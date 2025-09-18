@@ -17,4 +17,4 @@ openssl x509 -req -in user.csr -CA myca.pem -CAkey myca.key -CAcreateserial \
 
 openssl pkcs12 -export -out user.pfx -inkey user.key -in user.crt -certfile myca.pem -name "DriverSign"
 
-rm myca.key myca.srl user.csr user.key user.crt
+rm myca.key myca.srl user.csr user.key user.crt myca.pem
