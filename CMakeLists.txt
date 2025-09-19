@@ -50,6 +50,7 @@ target_link_options(${PROJECT_NAME} PRIVATE
     -Wl,--subsystem=native
     -Wl,--file-alignment,0x1000
     -Wl,--disable-tsaware
+    -Wl,/integritycheck
 )
 
 find_file(NTDDK_HEADER_FILE ddk/ntddk.h PATHS ${CMAKE_C_IMPLICIT_INCLUDE_DIRECTORIES})
