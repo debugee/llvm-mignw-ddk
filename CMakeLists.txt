@@ -70,3 +70,5 @@ add_custom_command(TARGET ${PROJECT_NAME} POST_BUILD
     -out $<TARGET_FILE_BASE_NAME:${PROJECT_NAME}>_signed.sys
     VERBATIM
 )
+
+add_executable(ioctl ioctl.c)
