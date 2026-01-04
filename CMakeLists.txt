@@ -31,17 +31,18 @@ target_compile_options(${PROJECT_NAME} PRIVATE -ffunction-sections -fdata-sectio
 target_link_options(${PROJECT_NAME} PRIVATE -Wl,--gc-sections)
 
 # when include compiler builtin headers error
-target_compile_options(${PROJECT_NAME} PRIVATE
-    -fno-builtin
-    -mno-mmx
-    -mno-sse
-    -mno-sse2
+ target_compile_options(${PROJECT_NAME} PRIVATE
+#     -fno-builtin
+#     -mno-mmx
+#     -mno-sse
+#     -mno-sse2
     -ffreestanding
-)
+ )
 
+# mingw headers not compatible with msvc
 # let clang compatible with msvc
-target_compile_options(${PROJECT_NAME} PRIVATE -fms-compatibility -fms-extensions)
-target_compile_definitions(${PROJECT_NAME} PRIVATE -D_MSC_VER=1920 -D_MSC_EXTENSIONS)
+# target_compile_options(${PROJECT_NAME} PRIVATE -fms-compatibility -fms-extensions)
+# target_compile_definitions(${PROJECT_NAME} PRIVATE -D_MSC_VER=1920 -D_MSC_EXTENSIONS)
 
 # disable tsaware is very important
 target_link_options(${PROJECT_NAME} PRIVATE
