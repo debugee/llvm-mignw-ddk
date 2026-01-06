@@ -5,6 +5,7 @@
 #define SYMLINK_NAME     L"\\DosDevices\\DemoDevice"
 #define IOCTL_DEMO_PRINT CTL_CODE(FILE_DEVICE_UNKNOWN, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
 
+
 NTSTATUS DemoDeviceIoControl(
     PDEVICE_OBJECT DeviceObject,
     PIRP Irp
@@ -59,6 +60,21 @@ VOID DemoUnload(_In_ PDRIVER_OBJECT DriverObject)
     DbgPrint("Driver unloaded\n");
 }
 
+int cxx_test();
+VOID C_Exception_Test()
+{
+    //clang must add -fasync-exceptions, if not, __try block begin/end will incorrect in exception directory
+    //see https://github.com/llvm/llvm-project/commit/797ad701522988e212495285dade8efac41a24d4
+    //and add -fms-extensions can enable __try/__except support
+    __try {
+        int *p = NULL;
+        *p = 42;  // 引发访问冲突异常
+    } __except (EXCEPTION_EXECUTE_HANDLER) {
+        DbgPrint("Caught an exception in kernel mode!\n");
+    }
+    cxx_test();
+}
+
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)
 {
     UNREFERENCED_PARAMETER(RegistryPath);
@@ -88,7 +104,7 @@ NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING Regi
     DriverObject->MajorFunction[IRP_MJ_CREATE] = DemoCreateClose;
     DriverObject->MajorFunction[IRP_MJ_CLOSE] = DemoCreateClose;
     DriverObject->DriverUnload = DemoUnload;
-
+    C_Exception_Test();
     DbgPrint("Driver loaded\n");
     return STATUS_SUCCESS;
 }

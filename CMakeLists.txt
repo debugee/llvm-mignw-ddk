@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(testddk LANGUAGES C)
+project(testddk LANGUAGES C CXX)
 
 if ((NOT CMAKE_C_COMPILER_ID STREQUAL "Clang") OR (NOT MINGW))
     message(FATAL_ERROR "Only support llvm-mingw")
@@ -16,7 +16,7 @@ set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "")
 set(CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS "")
 set(CMAKE_SHARED_MODULE_CREATE_C_FLAGS "")
 
-add_library(${PROJECT_NAME} SHARED test.c)
+add_library(${PROJECT_NAME} SHARED test.c test.cpp)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     C_STANDARD 11
@@ -43,6 +43,18 @@ target_link_options(${PROJECT_NAME} PRIVATE -Wl,--gc-sections)
 # let clang compatible with msvc
 # target_compile_options(${PROJECT_NAME} PRIVATE -fms-compatibility -fms-extensions)
 # target_compile_definitions(${PROJECT_NAME} PRIVATE -D_MSC_VER=1920 -D_MSC_EXTENSIONS)
+
+#add c seh exceptions support, and __try/__except support
+#https://github.com/llvm/llvm-project/issues/62606
+#https://github.com/llvm/llvm-project/commit/797ad701522988e212495285dade8efac41a24d4
+target_compile_options(${PROJECT_NAME} PRIVATE $<$<COMPILE_LANGUAGE:C>:-fseh-exceptions -fexceptions -fasync-exceptions>)
+target_compile_options(${PROJECT_NAME} PRIVATE -fms-extensions) # enable __try/__except support
+
+#wdm.h define and intrin-impl.h define conflict
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    -D__INTRINSIC_DEFINED_InterlockedBitTestAndSet
+    -D__INTRINSIC_DEFINED_InterlockedBitTestAndReset
+)
 
 # disable tsaware is very important
 target_link_options(${PROJECT_NAME} PRIVATE
