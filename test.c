@@ -60,7 +60,6 @@ VOID DemoUnload(_In_ PDRIVER_OBJECT DriverObject)
     DbgPrint("Driver unloaded\n");
 }
 
-int cxx_test();
 VOID C_Exception_Test()
 {
     //clang must add -fasync-exceptions, if not, __try block begin/end will incorrect in exception directory
@@ -72,7 +71,6 @@ VOID C_Exception_Test()
     } __except (EXCEPTION_EXECUTE_HANDLER) {
         DbgPrint("Caught an exception in kernel mode!\n");
     }
-    cxx_test();
 }
 
 NTSTATUS DriverEntry(_In_ PDRIVER_OBJECT DriverObject, _In_ PUNICODE_STRING RegistryPath)

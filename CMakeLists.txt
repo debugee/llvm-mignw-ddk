@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.30)
 
-project(testddk LANGUAGES C CXX)
+project(testddk LANGUAGES C)
 
 if ((NOT CMAKE_C_COMPILER_ID STREQUAL "Clang") OR (NOT MINGW))
     message(FATAL_ERROR "Only support llvm-mingw")
@@ -16,7 +16,7 @@ set(CMAKE_SHARED_LIBRARY_CREATE_CXX_FLAGS "")
 set(CMAKE_SHARED_MODULE_CREATE_CXX_FLAGS "")
 set(CMAKE_SHARED_MODULE_CREATE_C_FLAGS "")
 
-add_library(${PROJECT_NAME} SHARED test.c test.cpp)
+add_library(${PROJECT_NAME} SHARED test.c)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     C_STANDARD 11
